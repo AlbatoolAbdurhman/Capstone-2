@@ -38,6 +38,7 @@ public class SupportAgentService {
 
         SupportAgent u= supportAgentRepository.findSupportAgentByAgentId(agentId);
         if (u != null) {
+            u.setDepartment(agent.getDepartment());
             u.setAgentId(agent.getAgentId());
             u.setName(agent.getName());
             u.setHireDate(agent.getHireDate());

@@ -166,11 +166,11 @@ public class TicketController {
         return ResponseEntity.ok(warnings);
     }
 
-    @GetMapping("/my-tickets/{clientId}")
-    public ResponseEntity getClientTickets(@PathVariable Integer clientId) {
-        List<Ticket> tickets = ticketService.getTicketsByClientId(clientId);
+    @GetMapping("/my-tickets/{employeeId}")
+    public ResponseEntity getClientTickets(@PathVariable Integer employeeId) {
+        List<Ticket> tickets = ticketService.getTicketsByClientId(employeeId);
             if(tickets.isEmpty()) {
-                return ResponseEntity.ok().body("No Tickets found for "+clientId);
+                return ResponseEntity.ok().body("No Tickets found for "+employeeId);
             }
         return ResponseEntity.ok(tickets);
     }

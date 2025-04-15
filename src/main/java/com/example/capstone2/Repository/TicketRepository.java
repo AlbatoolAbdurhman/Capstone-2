@@ -32,7 +32,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Integer> {
     List<Ticket> searchTicketsByKeyword(String keyword);
 
     //Getting repeated tickets from the same user within a short period (Spam Detection)
-    List<Ticket> findByClientIdAndCreatedAtAfter(Integer clientId, LocalDateTime afterTime);
+    List<Ticket> findByEmployeeIdAndCreatedAt (Integer clientId, LocalDateTime afterTime);
 
     //Upgrade ticket priority if it exceeds a certain number of days without a response
     @Query("SELECT t FROM Ticket t WHERE t.createdAt < ?1 AND (t.status = 'OPEN' OR t.status = 'IN_PROGRESS') AND t.ticketId NOT IN (SELECT tr.ticketId FROM TicketResponse tr)")

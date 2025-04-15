@@ -5,12 +5,10 @@ import com.example.capstone2.Model.SupportAgent;
 import com.example.capstone2.Model.Ticket;
 import com.example.capstone2.Model.TicketResponse;
 import com.example.capstone2.Repository.*;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +18,7 @@ import java.util.List;
 public class TicketService {
 
     private final TicketRepository ticketRepository;
-    private final ClientRepository clientRepository;
+    private final EmployeeRepository employeeRepository;
     private final SupportAgentRepository supportAgentRepository;
     private final TicketResponseRepository ticketResponseRepository;
     private final AdminRepository adminRepository;
@@ -32,7 +30,7 @@ public class TicketService {
 
     public String addTicket(Ticket ticket) {
 
-        if (clientRepository.findClientByClientId(ticket.getClientId()) == null) {
+        if (employeeRepository.findEmployeeByEmployeeId(ticket.getEmployeeId()) == null) {
             return "Clint not found";
         }
 
@@ -52,15 +50,15 @@ public class TicketService {
             return "Ticket not found";
         }
 
-        if (clientRepository.findClientByClientId(ticket.getTicketId()) == null) {
-            return "Client not found";
+        if (employeeRepository.findEmployeeByEmployeeId(ticket.getTicketId()) == null) {
+            return "Employee not found";
         }
         if (supportAgentRepository.findSupportAgentByAgentId(ticket.getAgentId()) == null) {
             return "Support Agent not found";
         }
-        ticket1.setTicketId(ticketId);
+        ticket1.setTicketId(ticket.getTicketId());
         ticket1.setAgentId(ticket.getAgentId());
-        ticket1.setClientId(ticket.getClientId());
+        ticket1.setEmployeeId(ticket.getEmployeeId());
         ticket1.setStatus(ticket.getStatus());
         ticket1.setPriority(ticket.getPriority());
         ticket1.setDescription(ticket.getDescription());
@@ -266,14 +264,14 @@ public class TicketService {
         for (Ticket t : allTickets) {
             LocalDateTime thirtyMinutesAgo = t.getCreatedAt().minusMinutes(30);
 
-            List<Ticket> recentTickets = ticketRepository.findByClientIdAndCreatedAtAfter(t.getClientId(), thirtyMinutesAgo);
+            List<Ticket> recentTickets = ticketRepository.findByEmployeeIdAndCreatedAt(t.getEmployeeId(), thirtyMinutesAgo);
 
             for (Ticket recent : recentTickets) {
                 if (!t.getTicketId().equals(recent.getTicketId())) {
                     if (t.getSubject().equalsIgnoreCase(recent.getSubject()) ||
                             t.getDescription().equalsIgnoreCase(recent.getDescription())) {
 
-                        spamList.add("Client ID " + t.getClientId() + " sent duplicate ticket within 30 minutes.");
+                        spamList.add("Employee ID " + t.getEmployeeId() + " sent duplicate ticket within 30 minutes.");
                         break;
                     }
                 }
